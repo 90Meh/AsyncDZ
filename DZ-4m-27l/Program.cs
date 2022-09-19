@@ -1,8 +1,11 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Net;
+using System.Threading.Tasks;
 
 Start();
+
+
 
 
 async Task Start()
@@ -16,15 +19,27 @@ async Task Start()
 
     //Вызов методов
 
-    var task = imageDownloader.DownloaderAsync();
     imageDownloader.Downloader();
+    var task = imageDownloader.DownloaderAsync();
+    
 
-    task.Wait();
-    //Конец выполнения    
-    Console.WriteLine("Нажмите любую клавишу для выхода.");
-    Console.ReadKey();
+
+    //Конец выполнения
+    Console.WriteLine("Нажмите клавишу A для выхода или любую другую клавишу для проверки статуса скачивания");    
+    examination(task);
+    
 }
 
+static void examination(Task task)
+{
+    var answer = Console.ReadKey().KeyChar;
+    Console.WriteLine();
+    if (answer != 65)
+    {
+        Console.WriteLine(task.IsCompletedSuccessfully);
+        examination(task);
+    }
+}
 
 
 public class ImageDownloader
@@ -91,6 +106,7 @@ public static class Message
 
     public static void MessageEnd() => Console.WriteLine("\n Скачивание файла закончилось \n");
 }
+
 
 
 
