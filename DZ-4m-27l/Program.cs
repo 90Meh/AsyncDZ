@@ -3,44 +3,59 @@
 using System.Net;
 using System.Threading.Tasks;
 
-Start();
-
-
-
-
-async Task Start()
-
+internal class Program
 {
-    //Создание объекта подписка на события
-    var imageDownloader = new ImageDownloader();
-    imageDownloader.ImageStarted += Message.MessageStart;
-    imageDownloader.ImageCompleted += Message.MessageEnd;
-
-
-    //Вызов методов
-
-    imageDownloader.Downloader();
-    var task = imageDownloader.DownloaderAsync();
-    
-
-
-    //Конец выполнения
-    Console.WriteLine("Нажмите клавишу A для выхода или любую другую клавишу для проверки статуса скачивания");    
-    examination(task);
-    
-}
-
-static void examination(Task task)
-{
-    var answer = Console.ReadKey().KeyChar;
-    Console.WriteLine();
-    if (answer != 65)
+    private static void Main(string[] args)
     {
-        Console.WriteLine(task.IsCompletedSuccessfully);
-        examination(task);
+        Start();
+
+        async Task Start()
+
+        {
+            //Создание объекта подписка на события
+            var imageDownloader = new ImageDownloader();
+            imageDownloader.ImageStarted += Message.MessageStart;
+            imageDownloader.ImageCompleted += Message.MessageEnd;
+
+
+            //Вызов методов
+
+            imageDownloader.Downloader();
+            var task = imageDownloader.DownloaderAsync();
+
+
+
+            //Конец выполнения
+            Console.WriteLine("Нажмите клавишу A для выхода или любую другую клавишу для проверки статуса скачивания");
+            examination(task);
+
+            Console.ReadKey();
+
+
+            Console.WriteLine("Нажмите клавишу A для выхода или любую другую клавишу для проверки статуса скачивания");
+            Task task1 = null;
+            for (int i = 0; i < 10; i++)
+            {
+                task1 = imageDownloader.DownloaderAsync();
+            }
+            examination(task1);
+            Console.ReadKey();
+        }
+
+        
+
+        static void examination(Task task)
+        {
+            var answer = Console.ReadKey().KeyChar;
+            Console.WriteLine();
+            if (answer != 65)
+            {
+                Console.WriteLine(task.IsCompletedSuccessfully);
+                examination(task);
+            }
+        }
     }
 }
-
 
 public class ImageDownloader
 {
@@ -50,7 +65,7 @@ public class ImageDownloader
     private string fileNameA = "bigimageAsync.jpg";
 
     //Адрес картинки
-    private string remoteUri = "https://effigis.com/wp-content/uploads/2015/02/Iunctus_SPOT5_5m_8bit_RGB_DRA_torngat_mountains_national_park_8bits_1.jpg";
+    private string remoteUri = "http://www.wincore.ru/uploads/posts/2016-07/1467891335_rw-5.jpg";
     //Путь к текущей директории
     private string currentDir = Directory.GetCurrentDirectory();
 
@@ -58,17 +73,18 @@ public class ImageDownloader
     //Асинхронный загрузчик фотографии
     public async Task DownloaderAsync()
     {
+        n++;
         var myWebClient = new WebClient();
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("Качаю Асинхронно\"{0}\" из \"{1}\" .......\n\n", fileNameA, remoteUri);
+        Console.WriteLine("Качаю Асинхронно\"{0}\" из \"{1}\" .......\n\n", fileNameA + n, remoteUri);
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine($" Путь загрузки - {currentDir} \n \n");
         Console.ResetColor();
         ImageStarted();
-        await myWebClient.DownloadFileTaskAsync(remoteUri, fileNameA);
+        await myWebClient.DownloadFileTaskAsync(remoteUri, fileNameA + n);
         ImageCompleted();
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("Успешно скачал Асинхронно\"{0}\" из \"{1}\"", fileNameA, remoteUri);
+        Console.WriteLine("Успешно скачал Асинхронно\"{0}\" из \"{1}\"", fileNameA + n, remoteUri);
         Console.ResetColor();
     }
 
@@ -101,7 +117,7 @@ public class ImageDownloader
 //Класс для статуса загрузки
 public static class Message
 {
-    
+
     public static void MessageStart() => Console.WriteLine("\n Скачивание файла началось \n");
 
     public static void MessageEnd() => Console.WriteLine("\n Скачивание файла закончилось \n");
