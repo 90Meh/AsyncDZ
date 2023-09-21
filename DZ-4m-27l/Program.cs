@@ -27,31 +27,34 @@ internal class Program
 
             //Конец выполнения
             Console.WriteLine("Нажмите клавишу A для выхода или любую другую клавишу для проверки статуса скачивания");
-            examination(task);
+            Examination(task);
 
             Console.ReadKey();
 
 
             Console.WriteLine("Нажмите клавишу A для выхода или любую другую клавишу для проверки статуса скачивания");
-            Task task1 = null;
+            List<Task> tasks = new List<Task>();
             for (int i = 0; i < 10; i++)
             {
-                task1 = imageDownloader.DownloaderAsync();
+                tasks.Add(imageDownloader.DownloaderAsync());
             }
-            examination(task1);
-            Console.ReadKey();
+            foreach (var item in tasks)
+            {
+                Examination(item);
+            }
+            await Task.WhenAll(tasks);
+
         }
+        Console.ReadKey();
 
-        
-
-        static void examination(Task task)
+        static void Examination(Task task)
         {
             var answer = Console.ReadKey().KeyChar;
             Console.WriteLine();
             if (answer != 65)
             {
                 Console.WriteLine(task.IsCompletedSuccessfully);
-                examination(task);
+                Examination(task);
             }
         }
     }
@@ -62,7 +65,7 @@ public class ImageDownloader
     public int n = 1;
     //Имя файла
     private string fileName = "bigimage.jpg";
-    private string fileNameA = "bigimageAsync.jpg";
+    private string fileNameA = "bigimageAsync";
 
     //Адрес картинки
     private string remoteUri = "http://www.wincore.ru/uploads/posts/2016-07/1467891335_rw-5.jpg";
@@ -76,15 +79,15 @@ public class ImageDownloader
         n++;
         var myWebClient = new WebClient();
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("Качаю Асинхронно\"{0}\" из \"{1}\" .......\n\n", fileNameA + n, remoteUri);
+        Console.WriteLine("Качаю Асинхронно\"{0}\" из \"{1}\" .......\n\n", fileNameA + n + ".jpg", remoteUri);
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine($" Путь загрузки - {currentDir} \n \n");
         Console.ResetColor();
         ImageStarted();
-        await myWebClient.DownloadFileTaskAsync(remoteUri, fileNameA + n);
+        await myWebClient.DownloadFileTaskAsync(remoteUri, fileNameA + n + ".jpg");
         ImageCompleted();
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("Успешно скачал Асинхронно\"{0}\" из \"{1}\"", fileNameA + n, remoteUri);
+        Console.WriteLine("Успешно скачал Асинхронно\"{0}\" из \"{1}\"", fileNameA + ".jpg", remoteUri);
         Console.ResetColor();
     }
 
