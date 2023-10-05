@@ -8,9 +8,8 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        Start(Examination);      
-        
-        Console.ReadKey();       
+        Start(Examination);
+        Console.ReadKey();
     }
     static void Examination(Task task)
     {
@@ -18,7 +17,15 @@ internal class Program
         Console.WriteLine();
         if (answer != 65)
         {
-            Console.WriteLine(task.IsCompletedSuccessfully);
+            if (!task.IsCompletedSuccessfully)
+            {
+                Console.WriteLine($"Ещё скачивается");
+            }
+            else
+            {
+                Console.WriteLine($"Загрузка завершена");
+            }
+
             Examination(task);
         }
     }
@@ -41,8 +48,10 @@ internal class Program
         //Конец выполнения
         Console.WriteLine("Нажмите клавишу A для выхода или любую другую клавишу для проверки статуса скачивания");
         Examination(task);
-
+        Console.Clear();
+        Console.WriteLine("Нажмите любую кнопку");
         Console.ReadKey();
+        Console.Clear();
 
 
         Console.WriteLine("Нажмите клавишу A для выхода или любую другую клавишу для проверки статуса скачивания");
@@ -56,7 +65,6 @@ internal class Program
             Examination(item);
         }
         await Task.WhenAll(tasks);
-
     }
 }
 

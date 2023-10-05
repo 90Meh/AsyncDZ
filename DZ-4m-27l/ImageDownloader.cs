@@ -26,7 +26,8 @@ namespace DZ_4m_27l
             n++;
             var myWebClient = new WebClient();
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Качаю Асинхронно\"{0}\" из \"{1}\" .......\n\n", fileNameA + n + ".jpg", remoteUri);
+            var name = (fileNameA + n + ".jpg");
+            Console.WriteLine("Качаю Асинхронно\"{0}\" из \"{1}\" .......\n\n", name, remoteUri);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($" Путь загрузки - {currentDir} \n \n");
             Console.ResetColor();
@@ -34,7 +35,7 @@ namespace DZ_4m_27l
             await myWebClient.DownloadFileTaskAsync(remoteUri, fileNameA + n + ".jpg");
             ImageCompleted();
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Успешно скачал Асинхронно\"{0}\" из \"{1}\"", fileNameA + ".jpg", remoteUri);
+            Console.WriteLine("Успешно скачал Асинхронно\"{0}\" из \"{1}\"", name, remoteUri);
             Console.ResetColor();
         }
 
