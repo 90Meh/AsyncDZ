@@ -22,7 +22,7 @@ namespace DZ_4m_27l
 
         //Асинхронный загрузчик фотографии
         public async Task DownloaderAsync()
-        {
+        {      
             n++;
             var myWebClient = new WebClient();
             Console.ForegroundColor = ConsoleColor.Green;

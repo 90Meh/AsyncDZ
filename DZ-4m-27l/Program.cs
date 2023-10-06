@@ -11,7 +11,7 @@ internal class Program
         Start(Examination);
         Console.ReadKey();
     }
-    static void Examination(Task task)
+    static Task Examination(Task task)
     {
         var answer = Console.ReadKey().KeyChar;
         Console.WriteLine();
@@ -28,10 +28,11 @@ internal class Program
 
             Examination(task);
         }
+        return task;
     }
     async static Task Start(StartExamDelegate Examination)
 
-    {
+    {        
         //Создание объекта подписка на события
         var imageDownloader = new ImageDownloader();
         imageDownloader.ImageStarted += Message.MessageStart;
@@ -62,7 +63,7 @@ internal class Program
         }
         foreach (var item in tasks)
         {
-            Examination(item);
+           await Examination(item);
         }
         await Task.WhenAll(tasks);
     }
@@ -71,4 +72,4 @@ internal class Program
 
 //Делегаты
 public delegate void EventStateDownload();
-public delegate void StartExamDelegate(Task task);
+public delegate Task StartExamDelegate(Task task);
